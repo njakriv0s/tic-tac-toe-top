@@ -26,23 +26,24 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 630px;
 }
 
 .button {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2em 4em;
-    height: 3.3em;
+    padding: 0 2em;
+    height: 75px;
     background-color: rgba(255, 255, 255, 0.2);
     color: white;
-    border: 5px solid white;
     border-radius: 10px;
-    
+    font-size: 2em;
 }
 
 .button:hover {
     background-color: rgba(255, 255, 255, 0.4);
+    border: 5px solid white;
 }
 
 .button:hover {
@@ -89,22 +90,28 @@ body {
     text-align: center;
     padding: 0.2em;
     color: white;
-    border: 0.2em solid white;
     background-color: rgba(255, 255, 255, 0.2);
 }
 
 .enter-input:hover {
     cursor: pointer;
     background-color: rgba(255, 255, 255, 0.4);
+    border: 0.2em solid white;
 }
 
 .enter-input:active {
     transform: translateY(2px);
 }
 
+.enter-input:focus {
+    border: 5px solid white;
+    outline: none;
+}
+
 .player-turn {
-    font-size: 3em;
+    font-size: 2.5em;
     font-weight: 500;
+    margin: 0 0.5em;
     color: white;
 }
 
