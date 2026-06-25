@@ -1,3 +1,25 @@
+let playerX = createPlayer("Nick", "X");
+let playerO = createPlayer("Chris", "O");
+let victory = false;
+let gameActive = false;
+
+const startButton = document.getElementById("start-game-button");
+
+const gridContainer = document.querySelector(".grid-container");
+// gridContainer.classList.add("inactive")
+
+const card = document.querySelector(".card");
+const flipCard = document.querySelector(".flip-card");
+const flipCardFront = document.querySelector(".flip-card-front");
+const flipCardBack = document.querySelector(".flip-card-back");
+
+startButton.addEventListener("click", (e) =>{
+    gameActive = true;
+    startButton.remove();
+    gridContainer.classList.remove('inactive');
+
+})
+
 const gameboard = (function() {
     let gameboardArray = new Array(9);
     const getGameboard = () => gameboardArray;
@@ -5,15 +27,9 @@ const gameboard = (function() {
 
 })();
 
-
 function createPlayer(name, symbol) {
     return {name, symbol};
 };
-
-
-let playerX = createPlayer("Nick", "X");
-let playerO = createPlayer("Chris", "O");
-let victory = false;
 
 const gameController = (function playsFirst() {
     const playerArray = new Array(2);
@@ -59,26 +75,23 @@ const gameController = (function playsFirst() {
     return {getPlayerArray, victoryCheck}
 })();
 
+function game() {
+    let gameLength = gameboard.getGameboard().length;
+    let currentPlayer = gameController.getPlayerArray()[0];
 
-// DON'T FORGET TO COMMIT FROM HERE
-// THE LOOP HAS TO BE CHANGED TO A WHILE LOOP
+    let i  = 0;
 
-
-let gameLength = gameboard.getGameboard().length;
-let currentPlayer = gameController.getPlayerArray()[0];
-
-let i  = 0;
-
-while (victory != true && i < 9) {
-    // alert(gameboard.getGameboard());
-    let playerChoice = prompt(`Turn ${i + 1}. ${currentPlayer.name} choose you placement`);
-    gameboard.getGameboard()[playerChoice - 1] = currentPlayer.symbol;
-    i++
-    gameController.victoryCheck()
-    if (victory === false) {
-        currentPlayer = currentPlayer === gameController.getPlayerArray()[0] ? gameController.getPlayerArray()[1] : gameController.getPlayerArray()[0];
+    while (victory != true && i < 9) {
+    
+        let playerChoice = prompt(`Turn ${i + 1}. ${currentPlayer.name} choose you placement`);
+        gameboard.getGameboard()[playerChoice - 1] = currentPlayer.symbol;
+        i++
+        gameController.victoryCheck()
+        if (victory === false) {
+            currentPlayer = currentPlayer === gameController.getPlayerArray()[0] ? gameController.getPlayerArray()[1] : gameController.getPlayerArray()[0];
     }
-    console.log(currentPlayer);
+
+}
 }
 
-console.log(gameboard.getGameboard());
+
