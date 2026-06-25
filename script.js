@@ -8,6 +8,7 @@ let victory = false;
 let gameActive = false;
 
 const startButton = document.getElementById("start-game-button");
+startButton.focus();
 const content = document.querySelector(".content");
 const gridContainer = document.querySelector(".grid-container");
 const card = document.querySelectorAll(".card");
@@ -117,7 +118,7 @@ card.forEach((flipCard, index) => flipCard.addEventListener("click", (e) => {
     gameboard.getGameboard()[index] = currentPlayer.symbol;
     if(currentPlayer === playerX) {
         flipCard.querySelector(".flip-card-back").textContent = "X";
-        flipCard.querySelector(".flip-card-back").style.background = "linear-gradient(45deg, red, white)";
+        flipCard.querySelector(".flip-card-back").style.background = "linear-gradient(45deg, rgba(255, 0, 0, 0.4), rgba(255, 255, 255, 0.4))";
         flipCard.classList.add("inactive")
 
 
@@ -126,7 +127,7 @@ card.forEach((flipCard, index) => flipCard.addEventListener("click", (e) => {
     }
     else {
         flipCard.querySelector(".flip-card-back").textContent = "O";
-        flipCard.querySelector(".flip-card-back").style.background = "linear-gradient(45deg, blue, white)";
+        flipCard.querySelector(".flip-card-back").style.background = "linear-gradient(45deg, rgba(0, 0, 255, 0.4), rgba(255, 255, 255, 0.4))";
         flipCard.classList.add("inactive")
 
         playerTurn.textContent = `${playerX.name} plays next!`;
@@ -142,7 +143,7 @@ card.forEach((flipCard, index) => flipCard.addEventListener("click", (e) => {
         gridContainer.classList.add("inactive");
     }
 
-    if (i === 9) {
+    if (i === 9 && victory === false) {``
         playerTurn.textContent = `It's a draw!`;
         content.appendChild(playerTurn);
     }
