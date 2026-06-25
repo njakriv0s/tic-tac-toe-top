@@ -5,20 +5,15 @@ const gameboard = (function() {
 
 })();
 
+
 function createPlayer(name, symbol) {
     return {name, symbol};
 };
 
-// TEMPORARY
-
-for (let i = 0; i <9; i++) {
-    gameboard.getGameboard()[i] = i;
-}
-
-// TEMPORARY
 
 let playerX = createPlayer("Nick", "X");
 let playerO = createPlayer("Chris", "O");
+let victory = false;
 
 const gameController = (function playsFirst() {
     const playerArray = new Array(2);
@@ -31,27 +26,59 @@ const gameController = (function playsFirst() {
         playerArray[0] = playerO;
     }
     const getPlayerArray = () => playerArray;
-    return {getPlayerArray}
+
+    // FOR SHORTHAND
+    let gp = gameboard.getGameboard();
+
+    const winCombos = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ];
+    
+    const comboLength = winCombos.length;
+
+    function victoryCheck() {
+            for (let i = 0; i < comboLength; i++) {
+                if (gp[winCombos[i][0]] != undefined) {
+                    if (gp[winCombos[i][0]] === gp[winCombos[i][1]] && gp[winCombos[i][1]] === gp[winCombos[i][2]]) {
+                    console.log("Victory")
+            
+                    victory = true;
+                    console.log(victory);
+                    }
+                }
+            }
+    }
+
+    return {getPlayerArray, victoryCheck}
 })();
 
 
 // DON'T FORGET TO COMMIT FROM HERE
+// THE LOOP HAS TO BE CHANGED TO A WHILE LOOP
 
 
 let gameLength = gameboard.getGameboard().length;
-
 let currentPlayer = gameController.getPlayerArray()[0];
 
+let i  = 0;
 
-
-for (let i = 0; i < gameLength; i++) {
-    alert(gameboard.getGameboard());
+while (victory != true && i < 9) {
+    // alert(gameboard.getGameboard());
     let playerChoice = prompt(`Turn ${i + 1}. ${currentPlayer.name} choose you placement`);
-    gameboard.getGameboard()[playerChoice] = currentPlayer.symbol;
-
-    currentPlayer = currentPlayer === gameController.getPlayerArray()[0] ? gameController.getPlayerArray()[1] : gameController.getPlayerArray()[0];
-    
+    gameboard.getGameboard()[playerChoice - 1] = currentPlayer.symbol;
+    i++
+    gameController.victoryCheck()
+    if (victory === false) {
+        currentPlayer = currentPlayer === gameController.getPlayerArray()[0] ? gameController.getPlayerArray()[1] : gameController.getPlayerArray()[0];
+    }
+    console.log(currentPlayer);
 }
 
 console.log(gameboard.getGameboard());
-
