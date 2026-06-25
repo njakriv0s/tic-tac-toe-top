@@ -2,31 +2,63 @@ function createPlayer(name, symbol) {
     return {name, symbol};
 };
 
-let playerX = createPlayer("Nick", "X");
-let playerO = createPlayer("Chris", "O");
+let playerX = createPlayer("", "X");
+let playerO = createPlayer("", "O");
 let victory = false;
 let gameActive = false;
 
 const startButton = document.getElementById("start-game-button");
+const content = document.querySelector(".content");
 const gridContainer = document.querySelector(".grid-container");
 const card = document.querySelectorAll(".card");
 const flipCard = document.querySelectorAll(".flip-card");
 const flipCardFront = document.querySelectorAll(".flip-card-front");
 const flipCardBack = document.querySelectorAll(".flip-card-back");
 
+let playerTurn = document.createElement("p");
+playerTurn.classList.add("player-turn");
+
 
 startButton.addEventListener("click", (e) =>{
     gameActive = true;
     startButton.remove();
-    gridContainer.classList.remove('inactive');
+    let contentInside = document.createElement("div");
+    contentInside.classList.add("content-inside");
+    content.appendChild(contentInside)
 
-})
+    let input = document.createElement("input");
+    input.classList.add("player-name-input");
+    input.placeholder = "Player 1 name";
+    contentInside.appendChild(input);
+    input.focus();
+    let enterInput = document.createElement("button");
+    enterInput.classList.add("enter-input");
+    enterInput.textContent = "Enter name"
+    contentInside.appendChild(enterInput);
+
+    enterInput.addEventListener("click", (e) => {
+        if (playerX.name === "") {
+            playerX.name = input.value;
+            input.value = "";
+            input.focus();
+            input.placeholder = "Player 2 name";
+        }
+        else {
+            playerO.name = input.value;
+            input.remove();
+            enterInput.remove();
+            contentInside.remove();
+            gridContainer.classList.remove('inactive');
+            playerTurn.textContent = `${gameController.getPlayerArray()[0].name} plays next!`;
+            content.appendChild(playerTurn);
+        }
+    })
+});
 
 const gameboard = (function() {
     let gameboardArray = new Array(9);
     const getGameboard = () => gameboardArray;
-    return {getGameboard}
-
+    return {getGameboard}   
 })();
 
 const gameController = (function playsFirst() {
@@ -39,6 +71,7 @@ const gameController = (function playsFirst() {
     else {
         playerArray[0] = playerO;
     }
+    
     const getPlayerArray = () => playerArray;
 
     // FOR SHORTHAND
@@ -61,10 +94,9 @@ const gameController = (function playsFirst() {
             for (let i = 0; i < comboLength; i++) {
                 if (gp[winCombos[i][0]] != undefined) {
                     if (gp[winCombos[i][0]] === gp[winCombos[i][1]] && gp[winCombos[i][1]] === gp[winCombos[i][2]]) {
-                    console.log("Victory")
-            
                     victory = true;
-                    console.log(victory);
+                    playerTurn.textContent = `Victory! ${currentPlayer.name} won!`;
+                    content.appendChild(playerTurn);
                     }
                 }
             }
@@ -78,45 +110,41 @@ let currentPlayer = gameController.getPlayerArray()[0];
 const getCurrentPlayer = () => currentPlayer;
 let i  = 0;
 
-card.forEach((flipCard) => flipCard.addEventListener("click", (e) => {
-    flipCard.querySelector(".flip-card").classList.add("flipped")
-    console.log(currentPlayer);
+card.forEach((flipCard, index) => flipCard.addEventListener("click", (e) => {
+    i++;
+    console.log(i);
+    flipCard.querySelector(".flip-card").classList.add("flipped");
+    gameboard.getGameboard()[index] = currentPlayer.symbol;
     if(currentPlayer === playerX) {
         flipCard.querySelector(".flip-card-back").textContent = "X";
         flipCard.querySelector(".flip-card-back").style.background = "linear-gradient(45deg, red, white)";
         flipCard.classList.add("inactive")
+
+
+        playerTurn.textContent = `${playerO.name} plays next!`;
+        content.appendChild(playerTurn);
     }
     else {
         flipCard.querySelector(".flip-card-back").textContent = "O";
         flipCard.querySelector(".flip-card-back").style.background = "linear-gradient(45deg, blue, white)";
         flipCard.classList.add("inactive")
+
+        playerTurn.textContent = `${playerX.name} plays next!`;
+        content.appendChild(playerTurn);
     }
 
-    currentPlayer = currentPlayer === gameController.getPlayerArray()[0] ? gameController.getPlayerArray()[1] : gameController.getPlayerArray()[0];
+    gameController.victoryCheck()
 
-}))
-
-
-
-function game() {
-    // let gameLength = gameboard.getGameboard().length;
-    // let currentPlayer = gameController.getPlayerArray()[0];
-    // const getCurrentPlayer = () => currentPlayer;
-    // let i  = 0;
-
-    while (victory != true && i < 9) {
-    
-        let playerChoice = prompt(`Turn ${i + 1}. ${currentPlayer.name} choose you placement`);
-        gameboard.getGameboard()[playerChoice - 1] = currentPlayer.symbol;
-        i++
-        gameController.victoryCheck()
-        if (victory === false) {
+    if (victory === false) {
             currentPlayer = currentPlayer === gameController.getPlayerArray()[0] ? gameController.getPlayerArray()[1] : gameController.getPlayerArray()[0];
         }
+    else {
+        gridContainer.classList.add("inactive");
     }
-    return {getCurrentPlayer}
-}
 
+    if (i === 9) {
+        playerTurn.textContent = `It's a draw!`;
+        content.appendChild(playerTurn);
+    }
 
-
-
+}))
