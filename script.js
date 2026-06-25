@@ -1,17 +1,19 @@
+function createPlayer(name, symbol) {
+    return {name, symbol};
+};
+
 let playerX = createPlayer("Nick", "X");
 let playerO = createPlayer("Chris", "O");
 let victory = false;
 let gameActive = false;
 
 const startButton = document.getElementById("start-game-button");
-
 const gridContainer = document.querySelector(".grid-container");
-// gridContainer.classList.add("inactive")
+const card = document.querySelectorAll(".card");
+const flipCard = document.querySelectorAll(".flip-card");
+const flipCardFront = document.querySelectorAll(".flip-card-front");
+const flipCardBack = document.querySelectorAll(".flip-card-back");
 
-const card = document.querySelector(".card");
-const flipCard = document.querySelector(".flip-card");
-const flipCardFront = document.querySelector(".flip-card-front");
-const flipCardBack = document.querySelector(".flip-card-back");
 
 startButton.addEventListener("click", (e) =>{
     gameActive = true;
@@ -26,10 +28,6 @@ const gameboard = (function() {
     return {getGameboard}
 
 })();
-
-function createPlayer(name, symbol) {
-    return {name, symbol};
-};
 
 const gameController = (function playsFirst() {
     const playerArray = new Array(2);
@@ -75,11 +73,36 @@ const gameController = (function playsFirst() {
     return {getPlayerArray, victoryCheck}
 })();
 
-function game() {
-    let gameLength = gameboard.getGameboard().length;
-    let currentPlayer = gameController.getPlayerArray()[0];
+let gameLength = gameboard.getGameboard().length;
+let currentPlayer = gameController.getPlayerArray()[0];
+const getCurrentPlayer = () => currentPlayer;
+let i  = 0;
 
-    let i  = 0;
+card.forEach((flipCard) => flipCard.addEventListener("click", (e) => {
+    flipCard.querySelector(".flip-card").classList.add("flipped")
+    console.log(currentPlayer);
+    if(currentPlayer === playerX) {
+        flipCard.querySelector(".flip-card-back").textContent = "X";
+        flipCard.querySelector(".flip-card-back").style.background = "linear-gradient(45deg, red, white)";
+        flipCard.classList.add("inactive")
+    }
+    else {
+        flipCard.querySelector(".flip-card-back").textContent = "O";
+        flipCard.querySelector(".flip-card-back").style.background = "linear-gradient(45deg, blue, white)";
+        flipCard.classList.add("inactive")
+    }
+
+    currentPlayer = currentPlayer === gameController.getPlayerArray()[0] ? gameController.getPlayerArray()[1] : gameController.getPlayerArray()[0];
+
+}))
+
+
+
+function game() {
+    // let gameLength = gameboard.getGameboard().length;
+    // let currentPlayer = gameController.getPlayerArray()[0];
+    // const getCurrentPlayer = () => currentPlayer;
+    // let i  = 0;
 
     while (victory != true && i < 9) {
     
@@ -89,9 +112,11 @@ function game() {
         gameController.victoryCheck()
         if (victory === false) {
             currentPlayer = currentPlayer === gameController.getPlayerArray()[0] ? gameController.getPlayerArray()[1] : gameController.getPlayerArray()[0];
+        }
     }
+    return {getCurrentPlayer}
+}
 
-}
-}
+
 
 
