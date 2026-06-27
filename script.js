@@ -5,7 +5,6 @@ function createPlayer(name, symbol) {
 let playerX = createPlayer("", "X");
 let playerO = createPlayer("", "O");
 let victory = false;
-let gameActive = false;
 
 const startButton = document.getElementById("start-game-button");
 startButton.focus();
@@ -13,14 +12,11 @@ const content = document.querySelector(".content");
 const gridContainer = document.querySelector(".grid-container");
 const card = document.querySelectorAll(".card");
 const flipCard = document.querySelectorAll(".flip-card");
-const flipCardFront = document.querySelectorAll(".flip-card-front");
-const flipCardBack = document.querySelectorAll(".flip-card-back");
 
 let playerTurn = document.createElement("p");
 playerTurn.classList.add("player-turn");
 
 startButton.addEventListener("click", (e) =>{
-    gameActive = true;
     startButton.remove();
     let contentInside = document.createElement("div");
     contentInside.classList.add("content-inside");
@@ -107,9 +103,9 @@ const gameController = (function playsFirst() {
                 content.appendChild(playAgainButton);
                 playAgainButton.addEventListener("click", (e) => {
                     j = 0 ;
-                    console.log(i);
                     victory = false;
                     randomizeTurn();
+                    currentPlayer = gameController.getPlayerArray()[0]
                     playAgainButton.remove();
                     card.forEach((card) => card.classList.remove("inactive"));
                     flipCard.forEach((flip) => flip.classList.remove("flipped"));
@@ -128,13 +124,11 @@ const gameController = (function playsFirst() {
 
 let gameLength = gameboard.getGameboard().length;
 let currentPlayer = gameController.getPlayerArray()[0];
-const getCurrentPlayer = () => currentPlayer;
 
 let j = 0;
 
 card.forEach((cardElement, index) => cardElement.addEventListener("click", (e) => {
     j++;
-    console.log(j);
     cardElement.querySelector(".flip-card").classList.add("flipped");
     gameboard.getGameboard()[index] = currentPlayer.symbol;
     if(currentPlayer === playerX) {
@@ -164,7 +158,7 @@ card.forEach((cardElement, index) => cardElement.addEventListener("click", (e) =
         gridContainer.classList.add("inactive");
     }
 
-    if (j === 9 && victory === false) {``
+    if (j === gameLength && victory === false) {
         playerTurn.textContent = `It's a draw!`;
         content.appendChild(playerTurn);
         let resetPlayButton = document.createElement("button");
@@ -175,6 +169,7 @@ card.forEach((cardElement, index) => cardElement.addEventListener("click", (e) =
         resetPlayButton.addEventListener("click", (e) => {
             j = 0;
             gameController.randomizeTurn();
+            currentPlayer = gameController.getPlayerArray()[0]
             resetPlayButton.remove();
             card.forEach((card) => card.classList.remove("inactive"));
             flipCard.forEach((flip) => flip.classList.remove("flipped"));
